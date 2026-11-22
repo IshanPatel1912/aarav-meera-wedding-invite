@@ -296,3 +296,87 @@ img{max-width:100%}
   .film-frame{transform:none}
   .film-play{width:62px;height:62px}
 }
+
+
+/* Reference palette: forest green, warm ivory and antique gold */
+:root{
+  --paper:#f5eee2;
+  --paper2:#fbf6ec;
+  --ink:#493b2b;
+  --muted:#8c7962;
+  --gold:#a98a5b;
+  --wine:#4b3732;
+}
+.intro-screen{
+  background:radial-gradient(ellipse at 50% 44%,#fbf6ec 0%,#f0e6d7 64%,#e4d5bf 100%);
+}
+.intro-topline,.intro-bottom{color:#7c684e}
+.intro-corner{color:rgba(112,111,74,.14)}
+.envelope-back{background:#e8deca;border-color:#c4ad83}
+.envelope-front{background:linear-gradient(140deg,#e8deca,#d7c6a4);border-bottom-color:#bba276}
+.envelope-flap{background:linear-gradient(160deg,#f4ecdc,#d8c8a8)}
+.envelope-letter{background:linear-gradient(145deg,#fffdf7,#f5eee2);border-color:#d5c5a7}
+.letter-names{color:#314033}
+.wax-seal{background:radial-gradient(circle at 34% 27%,#5b6a4d,#26392b 65%,#18271d);box-shadow:inset 0 0 0 3px rgba(228,207,160,.28),inset 0 0 0 6px rgba(21,38,27,.28),0 8px 16px rgba(31,42,29,.28)}
+.hero-arch{border-color:rgba(203,169,111,.92)}
+.hero-arch:before{border-color:rgba(227,202,155,.2)}
+.hero-arch .section-mark{color:#d4b77e}
+.date-caption,.date-city{color:#e6d2ae}
+.save-date-button{border-color:rgba(228,205,163,.72);color:#f7ecd8}
+.save-date-button:hover{background:rgba(185,155,100,.25)}
+.story-panel,.social-panel{
+  background-color:#f5eee2;
+  background-image:radial-gradient(rgba(112,91,59,.055) .6px,transparent .6px),linear-gradient(120deg,rgba(255,255,255,.32),transparent 45%,rgba(255,255,255,.18));
+}
+.story-heading h2,.moments-heading h2,.social-top h2{color:#453b2d}
+.story-heading p{color:#74634e}
+.celebrations-panel{background:#111a12;color:#f5eee2}
+.celebrations-background{opacity:.84}
+.celebrations-panel:after{background:radial-gradient(ellipse at 50% 42%,rgba(0,0,0,.05),rgba(5,13,7,.62) 78%),linear-gradient(180deg,rgba(7,13,8,.16),rgba(7,13,8,.38))}
+.celebration-heading .section-mark{color:#d5b982}
+.celebration-heading p{color:#e3d2b2}
+.event-card{
+  background:linear-gradient(180deg,#f5ead3,#e8d7b7);
+  color:#493b2b;
+  border-color:rgba(210,184,137,.9);
+}
+.event-card.is-active{
+  background:linear-gradient(180deg,#633b42,#43262d);
+  color:#f7ead5;
+  border-color:#c29a70;
+  box-shadow:0 18px 40px rgba(0,0,0,.4);
+}
+.event-card.is-active .event-symbol,
+.event-card.is-active .event-meta,
+.event-card.is-active .event-meta svg,
+.event-card.is-active .event-dress span,
+.event-card.is-active .event-dress strong,
+.event-card.is-active .event-instagram{color:#ead5b0}
+.event-card.is-active .event-dress{border-color:rgba(225,194,150,.34)}
+.event-card.is-active .event-calendar{
+  color:#f5e7cf;
+  border-color:rgba(231,203,160,.58);
+  background:rgba(24,17,19,.2);
+}
+.event-card.is-active .event-calendar:hover{background:#f2e2c5;color:#49342d}
+.event-calendar:hover{background:#687454;color:#fff8e9}
+.event-carousel-controls{color:#f5e8d3}
+.event-carousel-controls>button{border-color:rgba(231,213,177,.8)}
+.event-indicators span{border-color:#cdb17d}
+.event-indicators span.selected{background:#f0dfbd;border-color:#f0dfbd}
+.all-calendar-button{border-color:rgba(226,205,166,.65);color:#f2e5ce}
+.instagram-large{color:#4b4735}
+.instagram-handle{border-color:rgba(135,111,74,.48);color:#5f513d}
+.instagram-handle:hover{background:#e9dfcd}
+.destination-photo:before{border-color:rgba(247,238,219,.78)}
+.destination-arch{color:#514634}
+.destination-arch>span{color:#77694d}
+.destination-arch a{border-color:rgba(111,91,59,.58);background:rgba(249,243,229,.5)}
+.film-afterword{background:#e8deca}
+.film-eyebrow{color:#77734e}
+.film-copy h2 i,.film-signature{color:#3e503d}
+.film-copy p{color:#70634e}
+.film-frame{background:#172319}
+.film-play{background:rgba(30,49,34,.72)}
+.film-play:hover{background:#42533d}
+.film-caption{color:#f0e4cf}
