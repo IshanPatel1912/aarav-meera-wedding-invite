@@ -140,7 +140,7 @@ function HeroPanel({ dateVisible, saveWeddingDate }) {
         <span className="date-city">{wedding.city}</span>
       </div>
       <button className="save-date-button" onClick={saveWeddingDate}><CalendarDays size={15}/> ADD WEDDING DATE</button>
-      <a href="#story" className="home-scroll" onClick={onNavigate} aria-label="Scroll to our story"><ArrowDown size={21}/></a>
+      <a href="#story" className="home-scroll"  aria-label="Scroll to our story"><ArrowDown size={21}/></a>
     </div>
   </section>;
 }
