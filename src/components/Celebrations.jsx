@@ -44,7 +44,7 @@ export default function Celebrations({ onAddOne, onAddAll }) {
 
   return (
     <section className="panel celebrations" id="celebrations">
-      <div className="cel-bg" style={{ backgroundImage: `url("${wedding.celebrationsImage}")` }} />
+      <div className="cel-bg" data-parallax="0.12" style={{ backgroundImage: `url("${wedding.celebrationsImage}")` }} />
       <div className="cel-shade" />
       <div className="panel-inner">
         <Reveal className="cel-head">

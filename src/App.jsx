@@ -8,12 +8,16 @@ import Story from './components/Story';
 import Celebrations from './components/Celebrations';
 import Social from './components/Social';
 import Film from './components/Film';
+import TopNav from './components/TopNav';
+import { useScrollFx } from './lib/useScrollFx';
 
 export default function App() {
   // 'closed' -> 'opening' (animation) -> 'done'. The website is mounted the whole time.
   const [phase, setPhase] = useState('closed');
   const open = useCallback(() => setPhase((p) => (p === 'closed' ? 'opening' : p)), []);
   const done = useCallback(() => setPhase('done'), []);
+
+  useScrollFx();
 
   const main = wedding.events.find((e) => e.id === wedding.mainEventId) || wedding.events[0];
   const addMain = () => downloadCalendar([main], 'aarav-meera-wedding.ics');
@@ -22,6 +26,8 @@ export default function App() {
 
   return (
     <ErrorBoundary>
+      <div className="progress" aria-hidden="true" />
+      <TopNav />
       <main className="site">
         <div className="board">
           <Hero ready={phase !== 'closed'} onAddMain={addMain} />

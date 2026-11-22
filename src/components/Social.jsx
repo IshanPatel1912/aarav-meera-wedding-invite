@@ -30,7 +30,7 @@ export default function Social() {
       </div>
 
       <div className="social-bottom">
-        <div className="arch" style={{ backgroundImage: `url("${wedding.venueImage}")` }} role="img" aria-label={wedding.venue + ', ' + wedding.city}>
+        <div className="arch" data-parallax-bg="0.1" style={{ backgroundImage: `url("${wedding.venueImage}")` }} role="img" aria-label={wedding.venue + ', ' + wedding.city}>
           <div className="arch-text">
             <Divider className="light" />
             <p className="arch-city">{wedding.city.toUpperCase()}</p>

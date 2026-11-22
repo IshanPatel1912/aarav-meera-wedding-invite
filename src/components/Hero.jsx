@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, CalendarPlus } from 'lucide-react';
 import { wedding } from '../data';
-import { Divider, Lotus } from './Ornaments';
+import { Divider } from './Ornaments';
 
 export default function Hero({ ready, onAddMain }) {
   const ref = useRef(null);
@@ -19,17 +19,8 @@ export default function Hero({ ready, onAddMain }) {
 
   return (
     <section className="panel hero" id="home" ref={ref}>
-      <div className="hero-bg" style={{ backgroundImage: `url("${wedding.heroImage}")` }} />
+      <div className="hero-bg" data-parallax="0.18" style={{ backgroundImage: `url("${wedding.heroImage}")` }} />
       <div className="hero-shade" />
-      <header className="hero-nav">
-        <a href="#home" className="nav-logo" aria-label="Home"><Lotus size={26} /></a>
-        <nav aria-label="Primary">
-          <a href="#home">Home</a>
-          <a href="#story">Our Story</a>
-          <a href="#celebrations">Functions</a>
-          <a href="#gallery">Gallery</a>
-        </nav>
-      </header>
 
       <div className="hero-center">
         <svg className="hero-arch" viewBox="0 0 300 430" preserveAspectRatio="none" aria-hidden="true">
