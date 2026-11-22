@@ -5,34 +5,18 @@ import {
 } from 'lucide-react';
 import { wedding } from './data';
 
-function scrollTrack(ref, direction) {
-  if (!ref.current) return;
-  ref.current.scrollBy({ left: Math.max(220, ref.current.clientWidth * 0.72) * direction, behavior: 'smooth' });
-}
-
-function useReveal(opened) {
-  useEffect(() => {
-    if (!opened) return;
-    const nodes = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    nodes.forEach((node) => observer.observe(node));
-    return () => observer.disconnect();
-  }, [opened]);
+function scrollByPage(ref, direction) {
+  const track = ref.current;
+  if (!track) return;
+  track.scrollBy({ left: track.clientWidth * 0.72 * direction, behavior: 'smooth' });
 }
 
 function Ornament({ className = '' }) {
   return <span className={'ornament ' + className} aria-hidden="true">❀</span>;
 }
 
-function SectionMark() {
-  return <div className="section-mark" aria-hidden="true"><span/><Ornament/><span/></div>;
+function DividerOrnament({ className = '' }) {
+  return <div className={'divider-ornament ' + className}><span/><Ornament/><span/></div>;
 }
 
 function icsEscape(value = '') {
@@ -43,12 +27,12 @@ function icsDate(value) {
   return new Date(value).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
 }
 
-function downloadCalendarEvents(events, fileName = 'aarav-meera-wedding.ics') {
-  if (!events || !events.length) return;
+function downloadCalendar(events, fileName) {
+  if (!events?.length) return;
   const stamp = icsDate(new Date().toISOString());
   const entries = events.map((event) => {
     const start = new Date(event.startAt);
-    const end = new Date(start.getTime() + (event.durationMinutes || 180) * 60000);
+    const finish = new Date(start.getTime() + (event.durationMinutes || 180) * 60000);
     const description = [
       event.subtitle,
       'Dress code: ' + event.dress,
@@ -59,68 +43,59 @@ function downloadCalendarEvents(events, fileName = 'aarav-meera-wedding.ics') {
       'UID:' + event.id + '-aarav-meera@wedding-invite',
       'DTSTAMP:' + stamp,
       'DTSTART:' + icsDate(start.toISOString()),
-      'DTEND:' + icsDate(end.toISOString()),
+      'DTEND:' + icsDate(finish.toISOString()),
       'SUMMARY:' + icsEscape(event.name + ' — ' + wedding.groom + ' & ' + wedding.bride),
       'LOCATION:' + icsEscape(event.venue + ', ' + wedding.city),
       'DESCRIPTION:' + icsEscape(description),
       'END:VEVENT'
     ].join('\r\n');
   });
-  const content = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Aarav and Meera//Wedding Invitation//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', ...entries, 'END:VCALENDAR'].join('\r\n');
+  const content = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0',
+    'PRODID:-//Aarav and Meera//Wedding Invitation//EN',
+    'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', ...entries, 'END:VCALENDAR'
+  ].join('\r\n');
   const blob = new Blob([content], { type: 'text/calendar;charset=utf-8' });
   const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1200);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = fileName;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
 }
 
 function Intro({ onOpen }) {
   const [opening, setOpening] = useState(false);
-  const [dateVisible, setDateVisible] = useState(false);
-  const handleOpen = () => {
+  const open = () => {
     if (opening) return;
     setOpening(true);
-    window.setTimeout(() => setDateVisible(true), 420);
-    window.setTimeout(onOpen, 1650);
+    window.setTimeout(onOpen, 950);
   };
-  return <div className={'intro-screen ' + (opening ? 'intro-opening' : '')}>
-    <div className="intro-grain"/>
-    <div className="intro-corner intro-corner-left">✿</div>
-    <div className="intro-corner intro-corner-right">✿</div>
+  return <section className={'invitation-intro ' + (opening ? 'is-opening' : '')}>
+    <div className="intro-paper-grain"/>
+    <span className="intro-botanical intro-botanical-left">❧</span>
+    <span className="intro-botanical intro-botanical-right">❧</span>
     <div className="intro-topline"><span>AN INVITATION TO CELEBRATE</span><span>{wedding.city}</span></div>
-    <div className="envelope-wrap">
-      <div className="envelope-shadow"/>
-      <div className="envelope">
-        <div className="envelope-back"/>
-        <div className="envelope-letter">
-          <span className="letter-kicker">TOGETHER WITH OUR FAMILIES</span>
-          <span className="letter-names">{wedding.groom} <i>&amp;</i> {wedding.bride}</span>
-          <span className={'letter-date ' + (dateVisible ? 'date-visible' : '')}>{wedding.dateLine}</span>
-          <span className="letter-city">{wedding.city}</span>
-        </div>
-        <div className="envelope-front"/>
-        <div className="envelope-flap"/>
-        <button className="wax-seal" onClick={handleOpen} aria-label="Open the wedding invitation"><span>{wedding.monogram}</span></button>
-      </div>
+    <div className="intro-card">
+      <span className="intro-card-kicker">TOGETHER WITH OUR FAMILIES</span>
+      <DividerOrnament/>
+      <h1>{wedding.groom} <i>&amp;</i> {wedding.bride}</h1>
+      <p>{wedding.dateLine}</p>
+      <span className="intro-city">{wedding.city}</span>
+      <button className="intro-open-button" onClick={open}><span className="wax-monogram">{wedding.monogram}</span><span>OPEN INVITATION <ArrowDown size={14}/></span></button>
     </div>
-    <div className="intro-bottom">
-      <p>THE WEDDING OF</p>
-      <button onClick={handleOpen} className="open-invite">OPEN INVITATION <ArrowDown size={15}/></button>
-      <span className="intro-hint">TAP THE SEAL TO REVEAL THE DATE</span>
-    </div>
-  </div>;
+    <div className="intro-footer">A CELEBRATION OF LOVE · FAMILY · TOGETHERNESS</div>
+  </section>;
 }
 
-function HeroPanel({ dateVisible, saveWeddingDate }) {
-  return <section className="home-panel" id="home">
-    <div className="home-bg" style={{ backgroundImage: 'url("' + wedding.heroImage + '")' }}/>
-    <div className="home-shade"/>
-    <header className="panel-nav">
-      <a className="panel-brand" href="#home" aria-label="Home">✿</a>
+function HeroPanel({ dateVisible, onAddWedding }) {
+  return <section className="panel hero-panel" id="home">
+    <div className="hero-background" style={{ backgroundImage: 'url("' + wedding.heroImage + '")' }}/>
+    <div className="hero-overlay"/>
+    <header className="hero-navigation">
+      <a className="nav-flower" href="#home" aria-label="Home">❀</a>
       <nav>
         <a href="#home">Home</a>
         <a href="#story">Our Story</a>
@@ -128,121 +103,122 @@ function HeroPanel({ dateVisible, saveWeddingDate }) {
         <a href="#gallery">Gallery</a>
       </nav>
     </header>
-    <div className="hero-arch">
-      <div className="hero-name-kicker">THE<br/>WEDDING OF</div>
+    <div className="name-arch">
+      <span className="hero-kicker">THE<br/>WEDDING OF</span>
       <h1><span>{wedding.groom}</span><i>&amp;</i><span>{wedding.bride}</span></h1>
-      <SectionMark/>
+      <DividerOrnament/>
     </div>
-    <div className="home-date-block">
-      <div className={'date-reveal ' + (dateVisible ? 'date-reveal-visible' : '')}>
-        <span className="date-caption">SAVE THE DATE</span>
-        <strong>{wedding.dateLine}</strong>
-        <span className="date-city">{wedding.city}</span>
-      </div>
-      <button className="save-date-button" onClick={saveWeddingDate}><CalendarDays size={15}/> ADD WEDDING DATE</button>
-      <a href="#story" className="home-scroll"  aria-label="Scroll to our story"><ArrowDown size={21}/></a>
+    <div className={'hero-date-reveal ' + (dateVisible ? 'revealed' : '')}>
+      <span className="hero-save-label">SAVE THE DATE</span>
+      <strong>{wedding.dateLine}</strong>
+      <span>{wedding.city.toUpperCase()}</span>
     </div>
+    <button className="hero-add-calendar" onClick={onAddWedding}><CalendarDays size={13}/> ADD WEDDING DATE</button>
+    <a className="hero-scroll" href="#story" aria-label="Discover the invitation"><ArrowDown size={20}/></a>
   </section>;
 }
 
-function PhotoStack({ photos, className = '' }) {
-  return <div className={'photo-stack ' + className}>
-    {photos.slice(0, 3).map((photo, index) => <figure className={'stack-photo stack-photo-' + (index + 1)} key={photo.src}>
-      <img src={photo.src} alt={photo.alt} loading="lazy"/>
-    </figure>)}
-  </div>;
-}
-
-function StoryPanel({ galleryTrack }) {
-  return <section className="story-panel" id="story">
-    <div className="story-top">
-      <div className="story-heading reveal"><SectionMark/><h2>Our Story</h2><p>{wedding.story}</p></div>
-      <div className="story-feature reveal"><img src={wedding.storyImage} alt="Aarav and Meera together" loading="lazy"/></div>
+function GalleryPanel({ galleryRef, activePhoto, onPhotoScroll }) {
+  return <section className="panel story-panel" id="story">
+    <div className="story-upper">
+      <div className="story-leaves story-leaves-top">❧</div>
+      <div className="story-heading">
+        <DividerOrnament/>
+        <h2>Our Story</h2>
+        <p>{wedding.story}</p>
+      </div>
+      <div className="story-main-photo"><img src={wedding.storyImage} alt="Aarav and Meera together" /></div>
     </div>
-    <div className="moments-bottom" id="gallery">
-      <div className="moments-heading reveal"><SectionMark/><h2>A Few Moments</h2></div>
-      <div className="moments-track-wrap">
-        <button className="mini-arrow mini-arrow-left" onClick={() => scrollTrack(galleryTrack, -1)} aria-label="Previous moments"><ArrowLeft size={15}/></button>
-        <div className="moments-track" ref={galleryTrack}>
-          {wedding.gallery.map((photo, index) => <figure className={'moment-card moment-card-' + (index + 1)} key={photo.src}>
+    <div className="moments-section" id="gallery">
+      <div className="moments-heading">
+        <DividerOrnament/>
+        <h2>A Few Moments</h2>
+      </div>
+      <div className="moments-carousel">
+        <button className="gallery-arrow gallery-arrow-left" onClick={() => scrollByPage(galleryRef, -1)} aria-label="Previous photographs"><ArrowLeft size={15}/></button>
+        <div className="moments-track" ref={galleryRef} onScroll={onPhotoScroll}>
+          {wedding.gallery.map((photo, index) => <figure className={'moments-photo moments-photo-' + (index + 1) + (activePhoto === index ? ' active-photo' : '')} key={photo.src}>
             <img src={photo.src} alt={photo.alt} loading="lazy"/>
-            <figcaption>{photo.note}</figcaption>
           </figure>)}
         </div>
-        <button className="mini-arrow mini-arrow-right" onClick={() => scrollTrack(galleryTrack, 1)} aria-label="Next moments"><ArrowRight size={15}/></button>
+        <button className="gallery-arrow gallery-arrow-right" onClick={() => scrollByPage(galleryRef, 1)} aria-label="Next photographs"><ArrowRight size={15}/></button>
       </div>
-      <div className="moment-dots" aria-hidden="true"><i/><i/><i/><i/><i/></div>
+      <div className="gallery-pagination">{wedding.gallery.map((photo, index) => <span key={photo.src} className={activePhoto === index ? 'active' : ''}/>)}</div>
     </div>
   </section>;
 }
 
-function EventCard({ event, index, active, onCalendar }) {
-  return <article className={'event-card ' + event.tone + (active ? ' is-active' : '')}>
-    <div className="event-photo-wrap">
-      <img src={event.image} alt={event.name + ' celebration'} className="event-photo" loading="lazy"/>
-    </div>
-    <div className="event-card-body">
-      <span className="event-symbol">{event.symbol}</span>
+function FunctionCard({ event, index, isActive, onCalendar }) {
+  return <article className={'function-card ' + (isActive ? 'function-active' : 'function-side')}>
+    <div className="function-image"><img src={event.image} alt={event.name + ' function'} loading="lazy"/><span>0{index + 1}</span></div>
+    <div className="function-content">
+      <span className="function-symbol">{event.symbol}</span>
       <h3>{event.name}</h3>
-      <div className="event-meta"><CalendarDays size={13}/><span>{event.date}</span></div>
-      <div className="event-meta"><Clock3 size={13}/><span>{event.time}</span></div>
-      <div className="event-meta"><MapPin size={13}/><span>{event.venue}</span></div>
-      <div className="event-dress"><span>DRESS CODE</span><strong>{event.dress}</strong></div>
-      <a className="event-instagram" href={'https://www.instagram.com/' + event.handle + '/'} target="_blank" rel="noreferrer"><Instagram size={13}/> @{event.handle}</a>
-      <button className="event-calendar" onClick={() => onCalendar(event)}><CalendarDays size={14}/> ADD TO CALENDAR</button>
+      <div className="function-detail"><CalendarDays size={12}/><span>{event.dateShort}</span></div>
+      <div className="function-detail"><Clock3 size={12}/><span>{event.time}</span></div>
+      <div className="function-detail"><MapPin size={12}/><span>{event.venue}</span></div>
+      <div className="function-dress"><span>DRESS CODE</span><strong>{event.dress}</strong></div>
+      <a className="function-instagram" href={'https://www.instagram.com/' + event.handle + '/'} target="_blank" rel="noreferrer"><Instagram size={12}/> @{event.handle}</a>
+      <button className="function-calendar" onClick={() => onCalendar(event)}><CalendarDays size={13}/> ADD TO CALENDAR</button>
     </div>
-    <span className="event-number">0{index + 1}</span>
   </article>;
 }
 
-function CelebrationsPanel({ eventsTrack, activeEvent, onEventScroll, onCalendar, onAllCalendar }) {
-  return <section className="celebrations-panel" id="celebrations">
-    <div className="celebrations-background" style={{ backgroundImage: 'linear-gradient(rgba(12,22,14,.72), rgba(12,22,14,.76)), url("' + wedding.venueImage + '")' }}/>
-    <div className="celebration-heading reveal">
-      <SectionMark/>
+function CelebrationsPanel({ eventTrack, activeEvent, onEventScroll, onCalendar, onAllCalendar }) {
+  return <section className="panel celebrations-panel" id="celebrations">
+    <div className="celebrations-background" style={{ backgroundImage: 'url("' + wedding.celebrationsImage + '")' }}/>
+    <div className="celebrations-shade"/>
+    <header className="celebrations-heading">
+      <DividerOrnament/>
       <h2>The Celebrations</h2>
-      <p>Four days of love, laughter &amp; togetherness</p>
-    </div>
-    <div className="celebration-carousel">
-      <div className="event-track" ref={eventsTrack} onScroll={onEventScroll}>
-        {wedding.events.map((event, index) => <EventCard key={event.id} event={event} index={index} active={activeEvent === index} onCalendar={onCalendar}/>)}
+    </header>
+    <div className="functions-carousel">
+      <div className="functions-track" ref={eventTrack} onScroll={onEventScroll}>
+        {wedding.events.map((event, index) => <FunctionCard key={event.id} event={event} index={index} isActive={activeEvent === index} onCalendar={onCalendar}/>)}
       </div>
-      <div className="event-carousel-controls">
-        <button onClick={() => scrollTrack(eventsTrack, -1)} aria-label="Previous function"><ArrowLeft size={17}/></button>
-        <div className="event-indicators">{wedding.events.map((event, index) => <span key={event.id} className={activeEvent === index ? 'selected' : ''}/>)}</div>
-        <button onClick={() => scrollTrack(eventsTrack, 1)} aria-label="Next function"><ArrowRight size={17}/></button>
+      <div className="functions-controls">
+        <button onClick={() => scrollByPage(eventTrack, -1)} aria-label="Previous function"><ArrowLeft size={17}/></button>
+        <div className="functions-dots">{wedding.events.map((event, index) => <span key={event.id} className={activeEvent === index ? 'active' : ''}/>)}</div>
+        <button onClick={() => scrollByPage(eventTrack, 1)} aria-label="Next function"><ArrowRight size={17}/></button>
       </div>
     </div>
-    <button className="all-calendar-button" onClick={onAllCalendar}><CalendarDays size={15}/> ADD ALL FUNCTIONS TO CALENDAR</button>
+    <button className="all-functions-calendar" onClick={onAllCalendar}><CalendarDays size={13}/> ADD ALL FUNCTIONS TO CALENDAR</button>
   </section>;
 }
 
 function SocialPanel() {
-  return <section className="social-panel">
-    <div className="social-top">
-      <div className="instagram-large"><Instagram size={34}/></div>
+  return <section className="panel social-panel">
+    <div className="social-upper">
+      <Instagram className="instagram-mark" size={34} strokeWidth={1.7}/>
       <h2>Follow Our Wedding Journey</h2>
-      <a className="instagram-handle" href={'https://www.instagram.com/' + wedding.mainInstagram + '/'} target="_blank" rel="noreferrer">@{wedding.mainInstagram} <ExternalLink size={13}/></a>
-      <PhotoStack photos={wedding.gallery.slice(0, 3)} className="social-stack"/>
+      <a className="social-handle" href={'https://www.instagram.com/' + wedding.mainInstagram + '/'} target="_blank" rel="noreferrer">@{wedding.mainInstagram} <ExternalLink size={12}/></a>
+      <div className="social-photo-stack">
+        {wedding.socialPhotos.map((photo, index) => <figure className={'social-photo social-photo-' + (index + 1)} key={photo.src}><img src={photo.src} alt={photo.alt} loading="lazy"/></figure>)}
+      </div>
     </div>
-    <div className="destination-photo" style={{ backgroundImage: 'linear-gradient(0deg, rgba(24,28,22,.05), rgba(24,28,22,.03)), url("' + wedding.venueImage + '")' }}>
-      <div className="destination-arch"><SectionMark/><span>UDAIPUR, RAJASTHAN</span><strong>{wedding.venue}</strong><a href="https://www.google.com/maps/search/?api=1&query=Lake+Palace+Udaipur+Rajasthan" target="_blank" rel="noreferrer"><MapPin size={13}/> VIEW LOCATION</a></div>
+    <div className="destination-panel" style={{ backgroundImage: 'url("' + wedding.venueImage + '")' }}>
+      <div className="destination-arch">
+        <DividerOrnament/>
+        <span>UDAIPUR, RAJASTHAN</span>
+        <h3>{wedding.venue}</h3>
+        <a href={wedding.mapUrl} target="_blank" rel="noreferrer"><MapPin size={12}/> VIEW LOCATION</a>
+      </div>
     </div>
   </section>;
 }
 
-function FilmSection({ videoRef, filmPlaying, onToggle, onEnded }) {
+function FilmAfterword({ videoRef, playing, onPlay, onEnded }) {
   return <section className="film-afterword" id="film">
-    <div className="film-copy">
-      <span className="film-eyebrow">A MOMENT IN MOTION</span>
+    <div className="film-description">
+      <span>A MOMENT IN MOTION</span>
       <h2>Before the<br/><i>big day.</i></h2>
       <p>A little film of two people, one story, and the places that hold our memories.</p>
-      <span className="film-signature">{wedding.groom} &amp; {wedding.bride}</span>
+      <em>{wedding.groom} &amp; {wedding.bride}</em>
     </div>
-    <div className="film-frame">
-      <video ref={videoRef} src={wedding.film} poster={wedding.filmPoster} playsInline preload="metadata" controls={filmPlaying} onEnded={onEnded}/>
-      {!filmPlaying && <button className="film-play" onClick={onToggle} aria-label="Play the pre-wedding film"><Play size={24} fill="currentColor"/></button>}
-      <span className="film-caption">OUR PRE-WEDDING FILM · SAMPLE VIDEO</span>
+    <div className="film-screen">
+      <video ref={videoRef} src={wedding.film} poster={wedding.filmPoster} playsInline preload="metadata" controls={playing} onEnded={onEnded}/>
+      {!playing && <button onClick={onPlay} aria-label="Play the pre-wedding film"><Play size={24} fill="currentColor"/></button>}
+      <span>OUR PRE-WEDDING FILM</span>
     </div>
   </section>;
 }
@@ -250,50 +226,60 @@ function FilmSection({ videoRef, filmPlaying, onToggle, onEnded }) {
 export default function App() {
   const [opened, setOpened] = useState(false);
   const [dateVisible, setDateVisible] = useState(false);
-  const [activeEvent, setActiveEvent] = useState(2);
+  const [activeEvent, setActiveEvent] = useState(1);
+  const [activePhoto, setActivePhoto] = useState(0);
   const [filmPlaying, setFilmPlaying] = useState(false);
-  const eventsTrack = useRef(null);
-  const galleryTrack = useRef(null);
+  const eventTrack = useRef(null);
+  const galleryRef = useRef(null);
   const videoRef = useRef(null);
-  useReveal(opened);
-
-  const openSite = () => {
-    setOpened(true);
-    document.body.classList.add('site-open');
-    window.scrollTo({ top: 0, behavior: 'auto' });
-  };
 
   useEffect(() => {
     if (!opened) return;
-    const timer = window.setTimeout(() => setDateVisible(true), 180);
+    const timer = window.setTimeout(() => setDateVisible(true), 240);
     return () => window.clearTimeout(timer);
   }, [opened]);
 
   useEffect(() => {
-    if (!opened || !eventsTrack.current) return;
-    const track = eventsTrack.current;
+    if (!opened || !eventTrack.current) return;
+    const track = eventTrack.current;
     const selected = track.children[activeEvent];
-    if (selected) {
-      const left = selected.offsetLeft - (track.clientWidth - selected.clientWidth) / 2;
-      track.scrollTo({ left, behavior: 'auto' });
-    }
+    if (!selected) return;
+    const left = selected.offsetLeft - (track.clientWidth - selected.clientWidth) / 2;
+    track.scrollTo({ left: Math.max(0, left), behavior: 'instant' });
   }, [opened]);
 
-  const onEventScroll = () => {
-    const track = eventsTrack.current;
+  const handleEventScroll = () => {
+    const track = eventTrack.current;
     if (!track) return;
     const center = track.scrollLeft + track.clientWidth / 2;
-    let nearest = 0;
+    let best = 0;
     let distance = Infinity;
-    Array.from(track.children).forEach((child, index) => {
-      const childCenter = child.offsetLeft + child.clientWidth / 2;
-      const nextDistance = Math.abs(center - childCenter);
-      if (nextDistance < distance) {
-        distance = nextDistance;
-        nearest = index;
+    Array.from(track.children).forEach((card, index) => {
+      const cardCenter = card.offsetLeft + card.clientWidth / 2;
+      const delta = Math.abs(center - cardCenter);
+      if (delta < distance) {
+        best = index;
+        distance = delta;
       }
     });
-    setActiveEvent((current) => current === nearest ? current : nearest);
+    setActiveEvent((current) => current === best ? current : best);
+  };
+
+  const handlePhotoScroll = () => {
+    const track = galleryRef.current;
+    if (!track) return;
+    const center = track.scrollLeft + track.clientWidth / 2;
+    let best = 0;
+    let distance = Infinity;
+    Array.from(track.children).forEach((card, index) => {
+      const cardCenter = card.offsetLeft + card.clientWidth / 2;
+      const delta = Math.abs(center - cardCenter);
+      if (delta < distance) {
+        best = index;
+        distance = delta;
+      }
+    });
+    setActivePhoto((current) => current === best ? current : best);
   };
 
   const playFilm = () => {
@@ -305,20 +291,21 @@ export default function App() {
       videoRef.current.play().then(() => setFilmPlaying(true)).catch(() => setFilmPlaying(false));
     }
   };
+
   const weddingEvent = wedding.events.find((event) => event.id === 'wedding');
-  const saveWeddingDate = () => downloadCalendarEvents([weddingEvent], 'aarav-meera-wedding-date.ics');
-  const saveOneEvent = (event) => downloadCalendarEvents([event], 'aarav-meera-' + event.id + '.ics');
-  const saveAllEvents = () => downloadCalendarEvents(wedding.events, 'aarav-meera-all-wedding-functions.ics');
+  const addWeddingDate = () => downloadCalendar([weddingEvent], 'aarav-meera-wedding-date.ics');
+  const addFunction = (event) => downloadCalendar([event], 'aarav-meera-' + event.id + '.ics');
+  const addAllFunctions = () => downloadCalendar(wedding.events, 'aarav-meera-all-functions.ics');
 
-  if (!opened) return <Intro onOpen={openSite}/>;
+  if (!opened) return <Intro onOpen={() => setOpened(true)}/>;
 
-  return <div className="invitation-page">
-    <main className="invitation-board">
-    <HeroPanel dateVisible={dateVisible} saveWeddingDate={saveWeddingDate}/>
-    <StoryPanel galleryTrack={galleryTrack}/>
-    <CelebrationsPanel eventsTrack={eventsTrack} activeEvent={activeEvent} onEventScroll={onEventScroll} onCalendar={saveOneEvent} onAllCalendar={saveAllEvents}/>
-    <SocialPanel/>
+  return <div className="website-wrap">
+    <main className="four-panel-board">
+      <HeroPanel dateVisible={dateVisible} onAddWedding={addWeddingDate}/>
+      <GalleryPanel galleryRef={galleryRef} activePhoto={activePhoto} onPhotoScroll={handlePhotoScroll}/>
+      <CelebrationsPanel eventTrack={eventTrack} activeEvent={activeEvent} onEventScroll={handleEventScroll} onCalendar={addFunction} onAllCalendar={addAllFunctions}/>
+      <SocialPanel/>
     </main>
-    <FilmSection videoRef={videoRef} filmPlaying={filmPlaying} onToggle={playFilm} onEnded={() => setFilmPlaying(false)}/>
+    <FilmAfterword videoRef={videoRef} playing={filmPlaying} onPlay={playFilm} onEnded={() => setFilmPlaying(false)}/>
   </div>;
 }
