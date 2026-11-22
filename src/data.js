@@ -12,7 +12,7 @@ export const wedding = {
   events: [
     { id: 'haldi', name: 'Haldi', subtitle: 'A little sunshine, a lot of laughter', date: 'Friday, 12 February 2027', time: '10:00 AM onwards', venue: 'The Courtyard, Udaipur', dress: 'Sunshine yellow & ivory', handle: 'aaravmeera.haldi', image: photo('photo-1606800052052-a08af7148866', 900), tone: 'saffron', symbol: '✳' },
     { id: 'mehendi', name: 'Mehendi', subtitle: 'Stories written in henna', date: 'Friday, 12 February 2027', time: '4:00 PM onwards', venue: 'The Garden Pavilion', dress: 'Shades of green', handle: 'aaravmeera.mehendi', image: photo('photo-1594465919760-441fe5908ab0', 900), tone: 'sage', symbol: '❋' },
-    { id: 'sangeet', name: 'Sangeet', subtitle: 'One night, endless memories', date: 'Saturday, 13 February 2027', time: '7:00 PM onwards', venue: 'The Grand Ballroom', dress: 'Jewel tones & a little sparkle', handle: 'aaravmeera.sangeet', image: photo('photo-1507504031003-b417219a0', 900), tone: 'berry', symbol: '✧' },
+    { id: 'sangeet', name: 'Sangeet', subtitle: 'One night, endless memories', date: 'Saturday, 13 February 2027', time: '7:00 PM onwards', venue: 'The Grand Ballroom', dress: 'Jewel tones & a little sparkle', handle: 'aaravmeera.sangeet', image: photo('photo-1511795409834-ef04bbd61622', 900), tone: 'berry', symbol: '✧' },
     { id: 'wedding', name: 'The Wedding', subtitle: 'And so our forever begins', date: 'Sunday, 14 February 2027', time: '9:00 AM onwards', venue: 'The Lake Palace Lawns', dress: 'Traditional Indian · festive', handle: 'aaravmeera.wedding', image: photo('photo-1519741497674-611481863552', 900), tone: 'rose', symbol: '∞' }
   ],
   gallery: [
