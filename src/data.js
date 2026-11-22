@@ -14,7 +14,6 @@ export const wedding = {
   venue: 'The Lake Palace',
   venueImage: photo('photo-1566073771259-6a8506099945', 1200),
   mapUrl: 'https://www.google.com/maps/search/?api=1&query=Lake+Palace+Udaipur+Rajasthan',
-  mainInstagram: 'aaravmeera.wedding',
   events: [
     {
       id: 'haldi', name: 'Haldi', symbol: '❀',
