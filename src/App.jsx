@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   ArrowDown, ArrowLeft, ArrowRight, CalendarDays, Clock3, ExternalLink,
-  Instagram, MapPin, Menu, Play, X
+  Instagram, MapPin, Play
 } from 'lucide-react';
 import { wedding } from './data';
 
@@ -115,17 +115,17 @@ function Intro({ onOpen }) {
   </div>;
 }
 
-function HeroPanel({ onNavigate, dateVisible, saveWeddingDate }) {
+function HeroPanel({ dateVisible, saveWeddingDate }) {
   return <section className="home-panel" id="home">
     <div className="home-bg" style={{ backgroundImage: 'url("' + wedding.heroImage + '")' }}/>
     <div className="home-shade"/>
     <header className="panel-nav">
       <a className="panel-brand" href="#home" aria-label="Home">✿</a>
       <nav>
-        <a href="#home" onClick={onNavigate}>Home</a>
-        <a href="#story" onClick={onNavigate}>Our Story</a>
-        <a href="#celebrations" onClick={onNavigate}>Functions</a>
-        <a href="#gallery" onClick={onNavigate}>Gallery</a>
+        <a href="#home">Home</a>
+        <a href="#story">Our Story</a>
+        <a href="#celebrations">Functions</a>
+        <a href="#gallery">Gallery</a>
       </nav>
     </header>
     <div className="hero-arch">
@@ -251,7 +251,6 @@ export default function App() {
   const [opened, setOpened] = useState(false);
   const [dateVisible, setDateVisible] = useState(false);
   const [activeEvent, setActiveEvent] = useState(2);
-  const [mobileMenu, setMobileMenu] = useState(false);
   const [filmPlaying, setFilmPlaying] = useState(false);
   const eventsTrack = useRef(null);
   const galleryTrack = useRef(null);
@@ -297,7 +296,6 @@ export default function App() {
     setActiveEvent((current) => current === nearest ? current : nearest);
   };
 
-  const closeMenu = () => setMobileMenu(false);
   const playFilm = () => {
     if (!videoRef.current) return;
     if (filmPlaying) {
@@ -316,7 +314,7 @@ export default function App() {
 
   return <div className="invitation-page">
     <main className="invitation-board">
-    <HeroPanel onNavigate={closeMenu} dateVisible={dateVisible} saveWeddingDate={saveWeddingDate}/>
+    <HeroPanel dateVisible={dateVisible} saveWeddingDate={saveWeddingDate}/>
     <StoryPanel galleryTrack={galleryTrack}/>
     <CelebrationsPanel eventsTrack={eventsTrack} activeEvent={activeEvent} onEventScroll={onEventScroll} onCalendar={saveOneEvent} onAllCalendar={saveAllEvents}/>
     <SocialPanel/>
