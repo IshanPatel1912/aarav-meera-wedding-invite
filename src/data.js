@@ -53,5 +53,7 @@ export const wedding = {
   venue: 'The Lake Palace Lawns',
   address: 'Pichola Lake, Udaipur, Rajasthan, India',
   venueImage: photo('photo-1566073771259-6a8506099945', 1200),
-  storyImage: photo('photo-1537633552985-df8429e8048b', 1100)
+  storyImage: photo('photo-1537633552985-df8429e8048b', 1100),
+  film: 'https://videos.pexels.com/video-files/3195394/3195394-hd_1920_1080_25fps.mp4',
+  filmPoster: photo('photo-1525258946800-98cfd641d0de', 1200)
 };
