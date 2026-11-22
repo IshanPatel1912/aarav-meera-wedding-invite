@@ -1,37 +1,36 @@
-# Ivory Wedding Invitation — React + Vite
+# Aarav & Meera — Wedding Invitation
 
-A responsive, scroll-led Indian wedding invitation prototype inspired by the editorial Ivory aesthetic.
+A React + Vite wedding invitation rebuilt around the supplied four-panel visual reference.
 
-## Features
-- Interactive envelope and wax-seal opening reveal
-- Four-panel editorial layout inspired by the supplied reference image
-- Animated envelope opening and wedding-date reveal
-- Swipeable Haldi, Mehendi, Sangeet and Wedding cards
-- Date, local start time, venue, dress code and individual Instagram handle on every function card
-- Individual and all-functions calendar downloads using standard `.ics` files
-- Smooth swipeable pre-wedding photo gallery
-- Pre-wedding film section below the four-panel invitation
-- Venue details and Google Maps link
-- Responsive mobile layouts
+## Design
+- Full-height four-panel desktop composition: photo-led hero, ivory story and photo gallery, forest-green function carousel with a plum active card, and Instagram / palace-arch panel.
+- Mobile layout stacks the same four sections vertically.
+- Animated opening invitation and date reveal on the hero panel.
+- Swipeable photo gallery and function carousel.
+- Pre-wedding film section beneath the four-panel composition.
 
-Calendar dates and times, including the demo durations used in downloaded calendar entries, are editable in `src/data.js`.
+## Calendar
+- The hero panel adds the wedding date to a calendar.
+- Each function card can be added individually.
+- A separate action downloads every function in one `.ics` calendar file.
+- Event date/time, duration, venue, dress code and Instagram handle are editable in `src/data.js`.
+- The current content is sample data only. The displayed times and calendar durations should be replaced with the real schedule before sharing the invitation.
 
-## Demo content
-All names, dates, venues, Instagram handles, photos and video are placeholders. Update the wedding object in `src/data.js` when the real wedding details are ready.
-
-## Run locally
+## Setup
 ```bash
 npm install
 npm run dev
 ```
 
-## Build
+Production build:
 ```bash
 npm run build
 ```
 
 ## Vercel
-Import this repository into Vercel. Framework: Vite. Build command: `npm run build`. Output directory: `dist`. No environment variables are required.
+- Framework: Vite
+- Build command: `npm run build`
+- Output directory: `dist`
 
-## Media
-Demo photographs are loaded from Unsplash and the sample video from Pexels. Replace the URLs in `src/data.js` with the couple's approved media before publishing.
+## Sample media
+Sample photographs are loaded from Unsplash and the pre-wedding video from Pexels. Replace them with the couple's approved images and video before public launch.
