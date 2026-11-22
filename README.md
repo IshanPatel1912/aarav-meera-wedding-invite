@@ -4,13 +4,17 @@ A responsive, scroll-led Indian wedding invitation prototype inspired by the edi
 
 ## Features
 - Interactive envelope and wax-seal opening reveal
-- Cinematic couple hero and scroll-triggered section reveals
+- Four-panel editorial layout inspired by the supplied reference image
+- Animated envelope opening and wedding-date reveal
 - Swipeable Haldi, Mehendi, Sangeet and Wedding cards
-- Dress code, date, venue and individual Instagram handle on every function card
+- Date, local start time, venue, dress code and individual Instagram handle on every function card
+- Individual and all-functions calendar downloads using standard `.ics` files
 - Smooth swipeable pre-wedding photo gallery
-- Pre-wedding film player
+- Pre-wedding film section below the four-panel invitation
 - Venue details and Google Maps link
-- Responsive mobile navigation and layouts
+- Responsive mobile layouts
+
+Calendar dates and times, including the demo durations used in downloaded calendar entries, are editable in `src/data.js`.
 
 ## Demo content
 All names, dates, venues, Instagram handles, photos and video are placeholders. Update the wedding object in `src/data.js` when the real wedding details are ready.
