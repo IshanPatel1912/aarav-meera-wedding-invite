@@ -1,18 +1,33 @@
-# Aarav & Meera — Wedding Invitation Demo
+# Ivory Wedding Invitation — React + Vite
 
-A mobile-friendly, scroll-led wedding invitation with an animated envelope and wax-seal reveal, couple introduction, swipeable function cards (dress code + Instagram per event), swipeable pre-wedding gallery, sample pre-wedding video, and venue map.
+A responsive, scroll-led Indian wedding invitation prototype inspired by the editorial Ivory aesthetic.
+
+## Features
+- Interactive envelope and wax-seal opening reveal
+- Cinematic couple hero and scroll-triggered section reveals
+- Swipeable Haldi, Mehendi, Sangeet and Wedding cards
+- Dress code, date, venue and individual Instagram handle on every function card
+- Smooth swipeable pre-wedding photo gallery
+- Pre-wedding film player
+- Venue details and Google Maps link
+- Responsive mobile navigation and layouts
 
 ## Demo content
-All names, dates, venues, social handles and media are placeholders. Replace them before public sharing.
+All names, dates, venues, Instagram handles, photos and video are placeholders. Update the wedding object in `src/data.js` when the real wedding details are ready.
 
-## Deploy
-Import this private repository into Vercel. This is a static HTML site: no build command or environment variables are needed. Set the output directory to `.` if Vercel asks.
+## Run locally
+```bash
+npm install
+npm run dev
+```
 
-## Edit demo content
-The content is in `index.html`. Replace the Unsplash image URLs and sample Pexels video URL with the couple's approved photos and film. Update the event dates, times, venues, dress codes and Instagram handles.
+## Build
+```bash
+npm run build
+```
 
-## Notes
-- Tap the wax seal or Open Invitation to reveal the site.
-- Scroll reveals animate into view.
-- Function cards and pre-wedding photos support touch swipe and desktop arrow controls.
-- No RSVP / “Will you join us?” section is included.
+## Vercel
+Import this repository into Vercel. Framework: Vite. Build command: `npm run build`. Output directory: `dist`. No environment variables are required.
+
+## Media
+Demo photographs are loaded from Unsplash and the sample video from Pexels. Replace the URLs in `src/data.js` with the couple's approved media before publishing.
