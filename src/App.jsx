@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   ArrowDown, ArrowLeft, ArrowRight, CalendarDays, Clock3, ExternalLink,
-  Instagram, MapPin, Menu, X
+  Instagram, MapPin, Menu, Play, X
 } from 'lucide-react';
 import { wedding } from './data';
 
@@ -231,13 +231,31 @@ function SocialPanel() {
   </section>;
 }
 
+function FilmSection({ videoRef, filmPlaying, onToggle, onEnded }) {
+  return <section className="film-afterword" id="film">
+    <div className="film-copy">
+      <span className="film-eyebrow">A MOMENT IN MOTION</span>
+      <h2>Before the<br/><i>big day.</i></h2>
+      <p>A little film of two people, one story, and the places that hold our memories.</p>
+      <span className="film-signature">{wedding.groom} &amp; {wedding.bride}</span>
+    </div>
+    <div className="film-frame">
+      <video ref={videoRef} src={wedding.film} poster={wedding.filmPoster} playsInline preload="metadata" controls={filmPlaying} onEnded={onEnded}/>
+      {!filmPlaying && <button className="film-play" onClick={onToggle} aria-label="Play the pre-wedding film"><Play size={24} fill="currentColor"/></button>}
+      <span className="film-caption">OUR PRE-WEDDING FILM · SAMPLE VIDEO</span>
+    </div>
+  </section>;
+}
+
 export default function App() {
   const [opened, setOpened] = useState(false);
   const [dateVisible, setDateVisible] = useState(false);
   const [activeEvent, setActiveEvent] = useState(2);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [filmPlaying, setFilmPlaying] = useState(false);
   const eventsTrack = useRef(null);
   const galleryTrack = useRef(null);
+  const videoRef = useRef(null);
   useReveal(opened);
 
   const openSite = () => {
@@ -280,6 +298,15 @@ export default function App() {
   };
 
   const closeMenu = () => setMobileMenu(false);
+  const playFilm = () => {
+    if (!videoRef.current) return;
+    if (filmPlaying) {
+      videoRef.current.pause();
+      setFilmPlaying(false);
+    } else {
+      videoRef.current.play().then(() => setFilmPlaying(true)).catch(() => setFilmPlaying(false));
+    }
+  };
   const weddingEvent = wedding.events.find((event) => event.id === 'wedding');
   const saveWeddingDate = () => downloadCalendarEvents([weddingEvent], 'aarav-meera-wedding-date.ics');
   const saveOneEvent = (event) => downloadCalendarEvents([event], 'aarav-meera-' + event.id + '.ics');
@@ -287,10 +314,13 @@ export default function App() {
 
   if (!opened) return <Intro onOpen={openSite}/>;
 
-  return <main className="invitation-board">
+  return <div className="invitation-page">
+    <main className="invitation-board">
     <HeroPanel onNavigate={closeMenu} dateVisible={dateVisible} saveWeddingDate={saveWeddingDate}/>
     <StoryPanel galleryTrack={galleryTrack}/>
     <CelebrationsPanel eventsTrack={eventsTrack} activeEvent={activeEvent} onEventScroll={onEventScroll} onCalendar={saveOneEvent} onAllCalendar={saveAllEvents}/>
     <SocialPanel/>
-  </main>;
+    </main>
+    <FilmSection videoRef={videoRef} filmPlaying={filmPlaying} onToggle={playFilm} onEnded={() => setFilmPlaying(false)}/>
+  </div>;
 }
